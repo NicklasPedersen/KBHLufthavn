@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="testModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="air_route">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="owner_id" Type="int" Nullable="false" />
+          <Property Name="operator_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="airline">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="airport">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar" MaxLength="255" />
+          <Property Name="iata_code" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'test.dbo.route_point' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="route_point">
+          <Key>
+            <PropertyRef Name="route_id" />
+            <PropertyRef Name="airport_id" />
+          </Key>
+          <Property Name="route_id" Type="int" Nullable="false" />
+          <Property Name="airport_id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__air_route__opera__3E52440B">
+          <End Role="airline" Type="Self.airline" Multiplicity="1" />
+          <End Role="air_route" Type="Self.air_route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="airline">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="air_route">
+              <PropertyRef Name="operator_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__air_route__owner__3D5E1FD2">
+          <End Role="airline" Type="Self.airline" Multiplicity="1" />
+          <End Role="air_route" Type="Self.air_route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="airline">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="air_route">
+              <PropertyRef Name="owner_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__route_poi__airpo__403A8C7D">
+          <End Role="airport" Type="Self.airport" Multiplicity="1" />
+          <End Role="route_point" Type="Self.route_point" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="airport">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="route_point">
+              <PropertyRef Name="airport_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__route_poi__route__3F466844">
+          <End Role="air_route" Type="Self.air_route" Multiplicity="1" />
+          <End Role="route_point" Type="Self.route_point" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="air_route">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="route_point">
+              <PropertyRef Name="route_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="testModelStoreContainer">
+          <EntitySet Name="air_route" EntityType="Self.air_route" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="airline" EntityType="Self.airline" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="airport" EntityType="Self.airport" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="route_point" EntityType="Self.route_point" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [route_point].[route_id] AS [route_id], 
+    [route_point].[airport_id] AS [airport_id]
+    FROM [dbo].[route_point] AS [route_point]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__air_route__opera__3E52440B" Association="Self.FK__air_route__opera__3E52440B">
+            <End Role="airline" EntitySet="airline" />
+            <End Role="air_route" EntitySet="air_route" />
+          </AssociationSet>
+          <AssociationSet Name="FK__air_route__owner__3D5E1FD2" Association="Self.FK__air_route__owner__3D5E1FD2">
+            <End Role="airline" EntitySet="airline" />
+            <End Role="air_route" EntitySet="air_route" />
+          </AssociationSet>
+          <AssociationSet Name="FK__route_poi__airpo__403A8C7D" Association="Self.FK__route_poi__airpo__403A8C7D">
+            <End Role="airport" EntitySet="airport" />
+            <End Role="route_point" EntitySet="route_point" />
+          </AssociationSet>
+          <AssociationSet Name="FK__route_poi__route__3F466844" Association="Self.FK__route_poi__route__3F466844">
+            <End Role="air_route" EntitySet="air_route" />
+            <End Role="route_point" EntitySet="route_point" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="testModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="air_route">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="owner_id" Type="Int32" Nullable="false" />
+          <Property Name="operator_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="airline" Relationship="Self.FK__air_route__opera__3E52440B" FromRole="air_route" ToRole="airline" />
+          <NavigationProperty Name="airline1" Relationship="Self.FK__air_route__owner__3D5E1FD2" FromRole="air_route" ToRole="airline" />
+          <NavigationProperty Name="airport" Relationship="Self.route_point" FromRole="air_route" ToRole="airport" />
+        </EntityType>
+        <EntityType Name="airline">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="air_route" Relationship="Self.FK__air_route__opera__3E52440B" FromRole="airline" ToRole="air_route" />
+          <NavigationProperty Name="air_route1" Relationship="Self.FK__air_route__owner__3D5E1FD2" FromRole="airline" ToRole="air_route" />
+        </EntityType>
+        <EntityType Name="airport">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="iata_code" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="air_route" Relationship="Self.route_point" FromRole="airport" ToRole="air_route" />
+        </EntityType>
+        <Association Name="FK__air_route__opera__3E52440B">
+          <End Role="airline" Type="Self.airline" Multiplicity="1" />
+          <End Role="air_route" Type="Self.air_route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="airline">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="air_route">
+              <PropertyRef Name="operator_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__air_route__owner__3D5E1FD2">
+          <End Role="airline" Type="Self.airline" Multiplicity="1" />
+          <End Role="air_route" Type="Self.air_route" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="airline">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="air_route">
+              <PropertyRef Name="owner_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="route_point">
+          <End Role="airport" Type="Self.airport" Multiplicity="*" />
+          <End Role="air_route" Type="Self.air_route" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="testEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="air_route" EntityType="Self.air_route" />
+          <EntitySet Name="airline" EntityType="Self.airline" />
+          <EntitySet Name="airport" EntityType="Self.airport" />
+          <AssociationSet Name="FK__air_route__opera__3E52440B" Association="Self.FK__air_route__opera__3E52440B">
+            <End Role="airline" EntitySet="airline" />
+            <End Role="air_route" EntitySet="air_route" />
+          </AssociationSet>
+          <AssociationSet Name="FK__air_route__owner__3D5E1FD2" Association="Self.FK__air_route__owner__3D5E1FD2">
+            <End Role="airline" EntitySet="airline" />
+            <End Role="air_route" EntitySet="air_route" />
+          </AssociationSet>
+          <AssociationSet Name="route_point" Association="Self.route_point">
+            <End Role="airport" EntitySet="airport" />
+            <End Role="air_route" EntitySet="air_route" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="testModelStoreContainer" CdmEntityContainer="testEntities">
+          <EntitySetMapping Name="air_route">
+            <EntityTypeMapping TypeName="testModel.air_route">
+              <MappingFragment StoreEntitySet="air_route">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="owner_id" ColumnName="owner_id" />
+                <ScalarProperty Name="operator_id" ColumnName="operator_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="airline">
+            <EntityTypeMapping TypeName="testModel.airline">
+              <MappingFragment StoreEntitySet="airline">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="airport">
+            <EntityTypeMapping TypeName="testModel.airport">
+              <MappingFragment StoreEntitySet="airport">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="iata_code" ColumnName="iata_code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="route_point" TypeName="testModel.route_point" StoreEntitySet="route_point">
+            <EndProperty Name="airport">
+              <ScalarProperty Name="id" ColumnName="airport_id" />
+            </EndProperty>
+            <EndProperty Name="air_route">
+              <ScalarProperty Name="id" ColumnName="route_id" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
